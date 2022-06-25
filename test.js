@@ -17,27 +17,16 @@ const vm = new Vue({
     }
   }
 });
-console.log(vm)
 setTimeout(() => {
   // vm.$set(vm.profile, 'xyz', 'xxxxx')
-  vm.pokes.push(6)
-  // vm.pokes.push(6)
-  // vm.pokes.push(6)
-  // vm.pokes[999] = '6';
-  // vm.name = '章三'
-  // vm.age = '40'
-  // vm.sex = '女'
-  // vm.profile.email = '1234567@qq.com'
+  vm.name = '章三'
+  vm.age = '40'
+  vm.sex = '女'
+  vm.profile.email = '1234567@qq.com'
 
-  // // vm.profile.wife.name = '周四'
-  // vm.profile.wife = {
-  //   name: '李若天',
-  //   age: 31,
-  //   sex: '女'
-  // }
+  vm.profile.wife = {
+    name: '李若天',
+    age: 31,
+    sex: '女'
+  }
 },3000)
-setTimeout(() => {
-  // vm.profile.xyz = '周五'
-  vm.pokes[3] = 7;
-  vm.pokes[4] = 7;
-},6000)

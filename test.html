@@ -4,14 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
-  <!-- <script type="text/javascript" src="./vue.js"></script> -->
-  <script type="text/javascript" src="./vue-backup.js"></script>
+  <script type="text/javascript" src="./vue.js"></script>
+  <!-- <script type="text/javascript" src="./vue-backup.js"></script> -->
 </head>
 
 <body>
-  <div id="app">
-    <span>{{name}} 非常棒</span>
-    <span>{{age}}</span>
+  <div id="app" class="wrapper" style="background: #000000;">
+    我的信息如下
+    <span id="desc">{{name}} 非常棒</span>
+    <span id="age">{{age}}</span>
     <span>{{sex}}</span>
     <span>{{profile.email}}</span>
     <span>{{profile.xyz}}</span>
