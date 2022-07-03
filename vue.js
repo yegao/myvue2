@@ -137,16 +137,67 @@ Vue.prototype.$mount = function(el) {
         if (template) {
             template = this.$options.template;
         } else {
-            console.dir(el)
             template = el.outerHTML;
         }
-        compileToFunctions(template)
+        this.__render = compileToFunctions(template)
+        const ell = this.__render.call(this);
+        el.parentNode.insertBefore(ell,el);
+        el.parentNode.removeChild(el);
     }
 }
 
+Vue.prototype.c = function(tagName, attrs, ...children) {
+    const el = document.createElement(tagName);
+    for (const key in attrs) {
+        el.setAttribute(key, attrs[key]);
+    }
+    for (const child of children) {
+        el.appendChild(child);
+    }
+    return el;
+}
+
+Vue.prototype.s = function(text) {
+    return document.createTextNode(text);
+}
+
 function compileToFunctions(template) {
-    console.log(template);
-    parseHTML(template)
+    const ast = parseHTML(template);
+    const code = generateCode(ast);
+    return new Function('with(this){ return ' + code + '}');
+}
+
+function generateAttrs(attrs) {
+    if(attrs.length === 0) {
+        return 'undefined';
+    }
+    let pairs = {};
+    for (const attr of attrs) {
+        pairs[attr.name] = attr.value;
+    }
+    return JSON.stringify(pairs);
+}
+
+function generateChildren(children) {
+    let code = '';
+    for (const child of children) {
+        code += generateCode(child) + ',';
+    }
+    if (code .length) {
+        code = code.slice(0, -1);
+    }
+    return code;
+}
+
+function generateCode(ast) {
+    let code = ''
+    const tagName = ast.tagName;
+    if (ast.type === 1) {
+        code += 'c(' + JSON.stringify(tagName) + ',' + generateAttrs(ast.attrs) +',' + generateChildren(ast.children) +')'
+    } else if (ast.type === 3) {
+        code += 's(' + JSON.stringify(ast.text) + ')'
+    }
+    return code;
 }
 
 var unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD/;
@@ -261,7 +312,7 @@ function parseHTML(html) {
         }
         let endIndex = 0;
         if((endIndex = html.indexOf('<')) > 0) {
-            const text = html.slice(0, end);
+            const text = html.slice(0, endIndex);
             console.log(text)
             advance(endIndex);
             str(text.replace(/\s*/g, ''))
